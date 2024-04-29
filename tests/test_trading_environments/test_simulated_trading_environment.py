@@ -1,11 +1,8 @@
 import httpretty
-import requests
 import unittest
 
-from trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
+from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
 
-
-simulated_trading_environment = SimulatedTradingEnvironment()
 
 class TestSimulatedTradingEnvironment(unittest.TestCase):
     
@@ -16,7 +13,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         expected_price = 62944.77483424213
         base_url = "http://example.com"
 
-        httpretty.register_uri(httpretty.GET, f"{base_url}/coins/single",
+        httpretty.register_uri(httpretty.POST, f"{base_url}",
                                body=f'{{"rate": {expected_price}}}',
                                content_type="application/json")
         
