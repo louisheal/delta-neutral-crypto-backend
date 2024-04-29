@@ -5,4 +5,3 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
     
     def get_price(self, symbol):
         pass
-
