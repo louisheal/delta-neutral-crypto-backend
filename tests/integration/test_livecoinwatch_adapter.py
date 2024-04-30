@@ -3,24 +3,22 @@ import unittest
 from dotenv import load_dotenv
 
 from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
-from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
 
 
 load_dotenv()
 
-API_KEY = os.getenv('API_KEY')
 BASE_URL = "https://api.livecoinwatch.com"
-TICKER = "BTC"
+API_KEY = os.getenv('API_KEY')
+COIN_TICKER = "BTC"
 
 coin_api = LiveCoinWatchAdapter(BASE_URL, API_KEY)
-environment = SimulatedTradingEnvironment(coin_api)
 
 
-class TestSimulatedTradingEnvironment(unittest.TestCase):
+class TestLiveCoinWatchAdapter(unittest.TestCase):
     
-    def test_get_price_returns(self):
+    def test_get_price_calls_api_and_returns_price(self):
         
-        price = environment.get_price(TICKER)
+        price = coin_api.get_price(COIN_TICKER)
         self.assertIsNotNone(price)
 
 
