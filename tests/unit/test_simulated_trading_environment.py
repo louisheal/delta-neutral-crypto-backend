@@ -1,37 +1,26 @@
-import httpretty
 import unittest
+from unittest.mock import MagicMock
 
+from src.coin_api_adapters.coin_api_adapter import ICoinApiAdapter
 from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
 
 
-API_KEY = "XXXXXX"
 PRICE = 123.456789
 TICKER = "BTC"
-URL = "http://example.com"
 
 
 class TestSimulatedTradingEnvironment(unittest.TestCase):
     
-    @httpretty.activate
     def test_get_price_returns_correct_value(self):
-
-        httpretty.register_uri(httpretty.POST, f"{URL}/coins/single",
-                               body=f'{{"rate": {PRICE}}}',
-                               content_type="application/json")
         
-        environment = SimulatedTradingEnvironment(URL, API_KEY)
+        coin_api = ICoinApiAdapter()
+        coin_api.get_price = MagicMock(return_value=PRICE)
 
+        environment = SimulatedTradingEnvironment(coin_api)
         price = environment.get_price(TICKER)
 
-        self.assertTrue(httpretty.has_request)
         self.assertEqual(price, PRICE)
-
-        request = httpretty.last_request()
-        api_key = request.headers.get('x-api-key')
-        ticker = request.parsed_body['code']
-
-        self.assertEqual(api_key, API_KEY)
-        self.assertEqual(ticker, TICKER)
+        coin_api.get_price.assert_called_with(TICKER)
 
 
 if __name__ == '__main__':
