@@ -20,7 +20,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         price = environment.get_price(TICKER)
 
         self.assertEqual(price, PRICE)
-        # TODO: Assert coin_api.get_price(ticker) was called
+        coin_api.get_price.assert_called_with(TICKER)
 
 
 if __name__ == '__main__':
