@@ -1,24 +1,25 @@
+import json
 import requests
-import os
-from dotenv import load_dotenv
 
 from .trading_environment import ITradingEnvironment
 
 
-load_dotenv()
-API_KEY = os.getenv('API_KEY')
-
 class SimulatedTradingEnvironment(ITradingEnvironment):
     
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, api_key: str):
         self.base_url = base_url
+        self.api_key = api_key
     
     def get_price(self, symbol: str) -> float:
-        payload = {'currency':'USD', 'code':symbol}
+        payload = json.dumps({
+            'currency': 'USD',
+            'code': symbol,
+            'meta': False
+        })
         headers = {
             'content-type': 'application/json',
-            'x-api-key': API_KEY
+            'x-api-key': self.api_key
         }
-        response = requests.post(self.base_url, headers=headers, data=payload)
+        response = requests.post(f"{self.base_url}/coins/single", headers=headers, data=payload)
         data = response.json()
         return data['rate']
