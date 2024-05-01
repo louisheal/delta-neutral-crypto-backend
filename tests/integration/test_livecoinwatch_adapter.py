@@ -9,7 +9,7 @@ load_dotenv()
 
 BASE_URL = "https://api.livecoinwatch.com"
 API_KEY = os.getenv('API_KEY')
-COIN_TICKER = "BTC"
+COIN_TICKER = "ETH"
 
 coin_api = LiveCoinWatchAdapter(BASE_URL, API_KEY)
 
