@@ -8,6 +8,9 @@ from src.trading_environments.simulated_trading_environment import SimulatedTrad
 PRICE = 123.456789
 TICKER = "BTC"
 
+# TODO: Use temporary file for unit testing buying and selling coins
+PORTFOLIO_PATH = "abc/def"
+
 
 class TestSimulatedTradingEnvironment(unittest.TestCase):
     
@@ -16,7 +19,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         coin_api = ICoinApiAdapter()
         coin_api.get_price = MagicMock(return_value=PRICE)
 
-        environment = SimulatedTradingEnvironment(coin_api)
+        environment = SimulatedTradingEnvironment(coin_api, PORTFOLIO_PATH)
         price = environment.get_price(TICKER)
 
         self.assertEqual(price, PRICE)
