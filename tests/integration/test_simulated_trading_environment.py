@@ -61,6 +61,44 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         self.assertEqual(1000.0, portfolio['USD'])
         self.assertFalse('ETH' in portfolio)
         self.assertFalse(result)
+    
+    def test_sell_coin_removes_from_portfolio(self):
+        
+        with open(portfolio_path, 'w', newline='') as file:
+            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
+            csv_writer.writerow({'Ticker':'USD', 'Quantity':0})
+            csv_writer.writerow({'Ticker':'ETH', 'Quantity':500})
+
+        result = environment.sell_coin('ETH', 500)
+
+        with open(portfolio_path, 'r', newline='') as file:
+            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
+            portfolio = {}
+            for row in csv_reader:
+                portfolio[row['Ticker']] = float(row['Quantity'])
+        
+        self.assertEqual(0.0, portfolio['ETH'])
+        self.assertGreater(portfolio['USD'], 0.0)
+        self.assertTrue(result)
+
+    def test_sell_coin_fails_when_not_enough_funds(self):
+        
+        with open(portfolio_path, 'w', newline='') as file:
+            csv_writer = csv.DictWriter(file,fieldnames=['Ticker', 'Quantity'])
+            csv_writer.writerow({'Ticker':'USD', 'Quantity':0})
+            csv_writer.writerow({'Ticker':'ETH', 'Quantity':500})
+
+        result = environment.sell_coin('ETH', 5000)
+
+        with open(portfolio_path, 'r', newline='') as file:
+            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
+            portfolio = {}
+            for row in csv_reader:
+                portfolio[row['Ticker']] = float(row['Quantity'])
+        
+        self.assertEqual(0.0, portfolio['USD'])
+        self.assertEqual(500.0, portfolio['ETH'])
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':
