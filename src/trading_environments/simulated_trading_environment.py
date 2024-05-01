@@ -1,8 +1,8 @@
-import csv
 import os
 
 from ..coin_api_adapters.coin_api_adapter import ICoinApiAdapter
 from .trading_environment import ITradingEnvironment
+from ..utils import load_portfolio, save_portfolio
 
 
 class SimulatedTradingEnvironment(ITradingEnvironment):
@@ -14,39 +14,24 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
     def get_price(self, coin_symbol: str) -> float:
         return self.coin_api.get_price(coin_symbol)
     
-    # TODO: Handle incorrect coin_symbol
     def buy_coin(self, coin_symbol: str, quantity_usd: int) -> bool:
-        with open(self.portfolio_path, 'r') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        
+        portfolio = load_portfolio(self.portfolio_path)
 
         if portfolio['USD'] < quantity_usd:
             return False
         
         portfolio['USD'] -= quantity_usd
-        if coin_symbol in portfolio:
-            portfolio[coin_symbol] += quantity_usd / self.get_price(coin_symbol)
-        else:
-            portfolio[coin_symbol] = quantity_usd / self.get_price(coin_symbol)
+        quantity_coin_bought = quantity_usd / self.get_price(coin_symbol)
+        portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) + quantity_coin_bought
 
-        with open(self.portfolio_path, 'w') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
-            for k, v in portfolio.items():
-                csv_writer.writerow({'Ticker':k, 'Quantity':v})
+        save_portfolio(portfolio, self.portfolio_path)
 
         return True
     
-    # TODO: Handle incorrect coin_symbol
     def sell_coin(self, coin_symbol: str, quantity_coin: int) -> bool:
-        with open(self.portfolio_path, 'r') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        
+        portfolio = load_portfolio(self.portfolio_path)
         
         if portfolio[coin_symbol] < quantity_coin:
             return False
@@ -54,9 +39,6 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
         portfolio[coin_symbol] -= quantity_coin
         portfolio['USD'] += quantity_coin * self.get_price(coin_symbol)
 
-        with open(self.portfolio_path, 'w') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
-            for k, v in portfolio.items():
-                csv_writer.writerow({'Ticker':k, 'Quantity':v})
+        save_portfolio(portfolio, self.portfolio_path)
 
         return True

@@ -1,10 +1,10 @@
-import csv
 import os
 import unittest
 from dotenv import load_dotenv
 
 from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
 from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
+from src.utils import load_portfolio, save_portfolio
 
 
 load_dotenv()
@@ -28,17 +28,10 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
 
     def test_buy_coin_adds_to_portfoilio(self):
         
-        with open(portfolio_path, 'w', newline='') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
-            csv_writer.writerow({'Ticker':'USD', 'Quantity':1000.0})
+        self.__setup_buy_coin_tests()
 
         result = environment.buy_coin('ETH', 500)
-
-        with open(portfolio_path, 'r', newline='') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        portfolio = load_portfolio(portfolio_path)
         
         self.assertEqual(500.0, portfolio['USD'])
         self.assertGreater(portfolio['ETH'], 0.0)
@@ -46,17 +39,10 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     
     def test_buy_coin_fails_when_not_enough_funds(self):
         
-        with open(portfolio_path, 'w', newline='') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
-            csv_writer.writerow({'Ticker':'USD', 'Quantity':1000.0})
+        self.__setup_buy_coin_tests()
 
         result = environment.buy_coin('ETH', 5000)
-
-        with open(portfolio_path, 'r', newline='') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        portfolio = load_portfolio(portfolio_path)
         
         self.assertEqual(1000.0, portfolio['USD'])
         self.assertFalse('ETH' in portfolio)
@@ -64,18 +50,10 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     
     def test_sell_coin_removes_from_portfolio(self):
         
-        with open(portfolio_path, 'w', newline='') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=['Ticker', 'Quantity'])
-            csv_writer.writerow({'Ticker':'USD', 'Quantity':0})
-            csv_writer.writerow({'Ticker':'ETH', 'Quantity':500})
+        self.__setup_sell_coin_tests()
 
         result = environment.sell_coin('ETH', 500)
-
-        with open(portfolio_path, 'r', newline='') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        portfolio = load_portfolio(portfolio_path)
         
         self.assertEqual(0.0, portfolio['ETH'])
         self.assertGreater(portfolio['USD'], 0.0)
@@ -83,22 +61,27 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
 
     def test_sell_coin_fails_when_not_enough_funds(self):
         
-        with open(portfolio_path, 'w', newline='') as file:
-            csv_writer = csv.DictWriter(file,fieldnames=['Ticker', 'Quantity'])
-            csv_writer.writerow({'Ticker':'USD', 'Quantity':0})
-            csv_writer.writerow({'Ticker':'ETH', 'Quantity':500})
+        self.__setup_sell_coin_tests()
 
         result = environment.sell_coin('ETH', 5000)
-
-        with open(portfolio_path, 'r', newline='') as file:
-            csv_reader = csv.DictReader(file, fieldnames=['Ticker', 'Quantity'])
-            portfolio = {}
-            for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+        portfolio = load_portfolio(portfolio_path)
         
         self.assertEqual(0.0, portfolio['USD'])
         self.assertEqual(500.0, portfolio['ETH'])
         self.assertFalse(result)
+    
+    def __setup_buy_coin_tests(self):
+        portfolio = {
+            'USD': 1000.0    
+        }
+        save_portfolio(portfolio, portfolio_path)
+    
+    def __setup_sell_coin_tests(self):
+        portfolio = {
+            'USD': 0.0,
+            'ETH': 500.0
+        }
+        save_portfolio(portfolio, portfolio_path)
 
 
 if __name__ == '__main__':
