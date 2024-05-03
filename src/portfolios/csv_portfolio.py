@@ -1,6 +1,8 @@
 import csv
 from pathlib import Path
 
+import math
+
 from .portfolio import IPortfolio
 
 
@@ -36,6 +38,13 @@ class CsvPortfolio(IPortfolio):
         portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) - quantity_coin
 
         return self.__save_portfolio(portfolio)
+    
+    def stake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool:
+        pass
+    
+    # TODO
+    def unstake_coin(self):
+        pass
 
     def __load_portfolio(self) -> dict:
         
