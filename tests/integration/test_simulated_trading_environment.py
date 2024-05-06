@@ -114,10 +114,6 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         self.assertGreater(quantity_weth, ZERO)
         self.assertEqual(quantity_lp_tokens, ZERO)
         self.assertTrue(result)
-
-    # TODO: Unstake fails when not enough lp tokens
-
-    # TODO: Unstake fails when pair id is invalid
     
     def __setup_buy_coin_tests(self):
         portfolio = {
