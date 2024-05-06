@@ -1,4 +1,3 @@
-import csv
 import os
 import unittest
 from dotenv import load_dotenv
@@ -8,6 +7,8 @@ from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
 from src.liquidity_pool_apis.uniswap_api import UniswapApi
 from src.portfolios.csv_portfolio import CsvPortfolio
 from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
+
+from tests.integration.utils import save_csv_portfolio
 
 
 load_dotenv()
@@ -20,10 +21,6 @@ GRAPH_API_KEY = os.getenv('GRAPH_API_KEY')
 UNISWAP_APP_ID = os.getenv('UNISWAP_APP_ID')
 
 PORTFOLIO_PATH = Path('tests/integration/fixtures/test_portfolio.csv')
-
-TICKER = 'Ticker'
-QUANTITY = 'Quantity'
-FIELDNAMES = [TICKER,QUANTITY]
 
 USD = 'USD'
 ETH = 'ETH'
@@ -92,28 +89,21 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         portfolio = {
             USD: 1000.0 
         }
-        self.__save_portfolio(portfolio)
+        save_csv_portfolio(portfolio, PORTFOLIO_PATH)
     
     def __setup_sell_coin_tests(self):
         portfolio = {
             USD: 0.0,
             ETH: 500.0
         }
-        self.__save_portfolio(portfolio)
+        save_csv_portfolio(portfolio, PORTFOLIO_PATH)
 
     def __setup_stake_coin_tests(self):
         portfolio = {
             USD: 100.0,
             ETH: 500.0
         }
-        self.__save_portfolio(portfolio)
-
-    def __save_portfolio(self, portfolio: dict):
-        
-         with open(PORTFOLIO_PATH, 'w') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
-            for k, v in portfolio.items():
-                csv_writer.writerow({TICKER:k,QUANTITY:v})
+        save_csv_portfolio(portfolio, PORTFOLIO_PATH)
 
 
 if __name__ == '__main__':

@@ -1,15 +1,11 @@
-import csv
 import unittest
 from pathlib import Path
 
 from src.portfolios.csv_portfolio import CsvPortfolio
+from tests.integration.utils import save_csv_portfolio
 
 
-PATH = Path("tests/integration/fixtures/test_portfolio.csv")
-
-TICKER = 'Ticker'
-QUANTITY = 'Quantity'
-FIELDNAMES = [TICKER, QUANTITY]
+PORTFOLIO_PATH = Path("tests/integration/fixtures/test_portfolio.csv")
 
 QUANTITY_USD = 1000.00
 QUANTITY_COIN_ONE = 0.123
@@ -25,7 +21,7 @@ COIN_TWO = 'COIN_TWO'
 class TestCsvPortfolio(unittest.TestCase):
     
     def setUp(self) -> None:
-        self.csv_portfolio = CsvPortfolio(PATH)
+        self.csv_portfolio = CsvPortfolio(PORTFOLIO_PATH)
     
     def test_get_quantity_usd(self):
         self.__setup_tests()
@@ -80,12 +76,4 @@ class TestCsvPortfolio(unittest.TestCase):
             COIN_ONE: QUANTITY_COIN_ONE,
             COIN_TWO: QUANTITY_COIN_TWO
         }
-        self.__save_portfolio(portfolio)
-
-    # TODO: Move to tests/utils.py
-    def __save_portfolio(self, portfolio: dict):
-        
-         with open(PATH, 'w') as file:
-            csv_writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
-            for k, v in portfolio.items():
-                csv_writer.writerow({'Ticker':k, 'Quantity':v})
+        save_csv_portfolio(portfolio, PORTFOLIO_PATH)
