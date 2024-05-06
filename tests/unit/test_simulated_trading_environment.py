@@ -92,8 +92,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     def test_stake_coin_calculates_lp_tokens_when_supply_greater_than_zero(self):
         
         self.mock_pool_api.get_pair.return_value = PAIR
-        # TODO: Move to function
-        self.mock_portfolio.get_quantity_coin.side_effect = lambda x: AMOUNT_0 if x == SYMBOL_0 else AMOUNT_1 if x == SYMBOL_1 else 'ERROR'
+        self.mock_portfolio.get_quantity_coin.side_effect = self.__quantity_coin_side_effect(AMOUNT_0, AMOUNT_1, SYMBOL_0, SYMBOL_1)
 
         result = self.environment.stake_coin(PAIR_ID, AMOUNT_0, AMOUNT_1)
 
