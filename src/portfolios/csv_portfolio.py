@@ -1,13 +1,13 @@
 import csv
 from pathlib import Path
 
-import math
-
 from .portfolio import IPortfolio
 
 
-FIELDNAMES = ['Ticker', 'Quantity']
 USD = 'USD'
+TICKER = 'Ticker'
+QUANTITY = 'Quantity'
+FIELDNAMES = [TICKER, QUANTITY]
 
 
 class CsvPortfolio(IPortfolio):
@@ -26,7 +26,7 @@ class CsvPortfolio(IPortfolio):
     def buy_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
         portfolio = self.__load_portfolio()
 
-        portfolio[USD] -= quantity_usd
+        portfolio[USD] = portfolio.get(USD, 0) - quantity_usd
         portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) + quantity_coin
 
         return self.__save_portfolio(portfolio)
@@ -34,17 +34,19 @@ class CsvPortfolio(IPortfolio):
     def sell_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
         portfolio = self.__load_portfolio()
 
-        portfolio[USD] += quantity_usd
+        portfolio[USD] = portfolio.get(USD, 0) + quantity_usd
         portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) - quantity_coin
 
         return self.__save_portfolio(portfolio)
     
-    def stake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool:
-        pass
-    
-    # TODO
-    def unstake_coin(self):
-        pass
+    def stake_coin(self, pool_id: str, symbol_one: float, symbol_two: float, quantity_one: float, quantity_two: float, quantity_lp_tokens: float) -> bool:
+        portfolio = self.__load_portfolio()
+
+        portfolio[symbol_one] = portfolio.get(symbol_one, 0) - quantity_one
+        portfolio[symbol_two] = portfolio.get(symbol_two, 0) - quantity_two
+        portfolio[pool_id] = portfolio.get(pool_id, 0) + quantity_lp_tokens
+
+        return self.__save_portfolio(portfolio)
 
     def __load_portfolio(self) -> dict:
         
@@ -52,7 +54,7 @@ class CsvPortfolio(IPortfolio):
             csv_reader = csv.DictReader(file, fieldnames=FIELDNAMES)
             portfolio = {}
             for row in csv_reader:
-                portfolio[row['Ticker']] = float(row['Quantity'])
+                portfolio[row[TICKER]] = float(row[QUANTITY])
 
         return portfolio
 
@@ -61,7 +63,7 @@ class CsvPortfolio(IPortfolio):
         with open(self.path, 'w') as file:
             csv_writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
             for k, v in portfolio.items():
-                csv_writer.writerow({'Ticker':k, 'Quantity':v})
+                csv_writer.writerow({TICKER:k, QUANTITY:v})
         
         return True
     

@@ -20,10 +20,6 @@ class IPortfolio(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def stake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool: 
-        pass
-    
-    @abc.abstractmethod
-    def unstake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool:
+    def stake_coin(self, pool_id: str, symbol_one: float, symbol_two: float, quantity_one: float, quantity_two: float, quantity_lp_tokens: float) -> bool: 
         pass
     
