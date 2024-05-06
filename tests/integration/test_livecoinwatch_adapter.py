@@ -7,9 +7,9 @@ from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
 
 load_dotenv()
 
-BASE_URL = "https://api.livecoinwatch.com"
-API_KEY = os.getenv('API_KEY')
-COIN_TICKER = "ETH"
+BASE_URL = os.getenv('COIN_URL')
+API_KEY = os.getenv('COIN_API_KEY')
+COIN_SYMBOL = 'ETH'
 
 coin_api = LiveCoinWatchAdapter(BASE_URL, API_KEY)
 
@@ -18,7 +18,7 @@ class TestLiveCoinWatchAdapter(unittest.TestCase):
     
     def test_get_price_calls_api_and_returns_price(self):
         
-        price = coin_api.get_price(COIN_TICKER)
+        price = coin_api.get_price(COIN_SYMBOL)
         self.assertIsNotNone(price)
 
 
