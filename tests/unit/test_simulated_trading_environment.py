@@ -106,7 +106,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     def test_stake_coin_calculates_lp_tokens_when_supply_is_zero(self):
         
         self.mock_pool_api.get_pair.return_value = PAIR_NO_SUPPLY
-        self.mock_portfolio.get_quantity_coin.side_effect = lambda x: AMOUNT_0 if x == SYMBOL_0 else AMOUNT_1 if x == SYMBOL_1 else 'ERROR'
+        self.mock_portfolio.get_quantity_coin.side_effect = self.__quantity_coin_side_effect(AMOUNT_0, AMOUNT_1, SYMBOL_0, SYMBOL_1)
 
         result = self.environment.stake_coin(PAIR_ID, AMOUNT_0, AMOUNT_1)
 
@@ -118,7 +118,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     def test_stake_coin_returns_false_when_liquidity_is_zero(self):
         
         self.mock_pool_api.get_pair.return_value = PAIR
-        self.mock_portfolio.get_quantity_coin.side_effect = lambda x: AMOUNT_0 if x == SYMBOL_0 else AMOUNT_1 if x == SYMBOL_1 else 'ERROR'
+        self.mock_portfolio.get_quantity_coin.side_effect = self.__quantity_coin_side_effect(AMOUNT_0, AMOUNT_1, SYMBOL_0, SYMBOL_1)
 
         result = self.environment.stake_coin(PAIR_ID, 0, 0)
 
@@ -129,7 +129,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     def test_stake_coin_returns_false_when_first_balance_is_zero(self):
         
         self.mock_pool_api.get_pair.return_value = PAIR
-        self.mock_portfolio.get_quantity_coin.side_effect = lambda x: 0 if x == SYMBOL_0 else AMOUNT_1 if x == SYMBOL_1 else 'ERROR'
+        self.mock_portfolio.get_quantity_coin.side_effect = self.__quantity_coin_side_effect(0, AMOUNT_1, SYMBOL_0, SYMBOL_1)
 
         result = self.environment.stake_coin(PAIR_ID, AMOUNT_0, AMOUNT_1)
 
@@ -141,7 +141,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
     def test_stake_coin_returns_false_when_second_balance_is_zero(self):
         
         self.mock_pool_api.get_pair.return_value = PAIR
-        self.mock_portfolio.get_quantity_coin.side_effect = lambda x: AMOUNT_0 if x == SYMBOL_0 else 0 if x == SYMBOL_1 else 'ERROR'
+        self.mock_portfolio.get_quantity_coin.side_effect = self.__quantity_coin_side_effect(AMOUNT_0, 0, SYMBOL_0, SYMBOL_1)
 
         result = self.environment.stake_coin(PAIR_ID, AMOUNT_0, AMOUNT_1)
 
@@ -149,6 +149,9 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
         self.mock_pool_api.get_pair.assert_called_once_with(PAIR_ID)
         self.mock_portfolio.stake_coin.assert_not_called()
         self.assertFalse(result)
+
+    def __quantity_coin_side_effect(self, amount_0: float, amount_1: float, symbol_0: str, symbol_1: str):
+        return lambda x: amount_0 if x == symbol_0 else amount_1 if x == symbol_1 else 'ERROR'
 
 
 if __name__ == '__main__':
