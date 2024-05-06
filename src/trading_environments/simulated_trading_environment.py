@@ -18,7 +18,7 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
     
     def buy_coin(self, coin_symbol: str, quantity_usd: float) -> bool:
 
-        if self.portfolio.get_quantity_usd() < quantity_usd:
+        if self.portfolio.get_quantity_dai() < quantity_usd:
             return False
         
         quantity_coin = quantity_usd / self.get_price(coin_symbol)
@@ -32,26 +32,44 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
         quantity_usd = quantity_coin * self.get_price(coin_symbol)
         return self.portfolio.sell_coin(coin_symbol, quantity_usd, quantity_coin)
 
-    def stake_coin(self, pair_id: str, amount_0: float, amount_1: float) -> bool:
+    def stake_coin(self, pair_id: str, quantity_one: float, quantity_two: float) -> bool:
         # TODO: After implementing new number type
         # MINIMUM_LIQUIDITY = 10**3
 
         pair = self.pool_api.get_pair(pair_id)
         total_supply = pair.total_supply
-        reserve_0 = pair.reserve0
-        reserve_1 = pair.reserve1
-        symbol_0 = pair.symbol0
-        symbol_1 = pair.symbol1
+        reserve_one = pair.reserve0
+        reserve_two = pair.reserve1
+        symbol_one = pair.symbol0
+        symbol_two = pair.symbol1
         
         if total_supply == 0:
-            liquidity = math.sqrt(amount_0 * amount_1) # - MINIMUM_LIQUIDITY
+            liquidity = math.sqrt(quantity_one * quantity_two) # - MINIMUM_LIQUIDITY
         else:
-            liquidity = min((amount_0 * total_supply) / reserve_0,
-                            (amount_1 * total_supply) / reserve_1)
+            liquidity = min((quantity_one * total_supply) / reserve_one,
+                            (quantity_two * total_supply) / reserve_two)
         
-        balance_0 = self.portfolio.get_quantity_coin(symbol_0)
-        balance_1 = self.portfolio.get_quantity_coin(symbol_1)
-        if balance_0 < amount_0 or balance_1 < amount_1 or liquidity <= 0:
+        balance_one = self.portfolio.get_quantity_coin(symbol_one)
+        balance_two = self.portfolio.get_quantity_coin(symbol_two)
+        if balance_one < quantity_one or balance_two < quantity_two or liquidity <= 0:
             return False
         
-        return self.portfolio.stake_coin(pair_id, symbol_0, symbol_1, amount_0, amount_1, liquidity)
+        return self.portfolio.stake_coin(pair_id, symbol_one, symbol_two, quantity_one, quantity_two, liquidity)
+    
+    def unstake_coin(self, pair_id: str, quantity_lp_tokens: float) -> bool:
+
+        lp_balance = self.portfolio.get_quantity_coin(pair_id)
+        if lp_balance < quantity_lp_tokens:
+            return False
+        
+        pair = self.pool_api.get_pair(pair_id)
+        total_supply = pair.total_supply
+        reserve_one = pair.reserve0
+        reserve_two = pair.reserve1
+        symbol_one = pair.symbol0
+        symbol_two = pair.symbol1
+        
+        quantity_one = (quantity_lp_tokens / total_supply) * reserve_one
+        quantity_two = (quantity_lp_tokens / total_supply) * reserve_two
+
+        return self.portfolio.unstake_coin(pair_id, symbol_one, symbol_two, quantity_one, quantity_two, quantity_lp_tokens)

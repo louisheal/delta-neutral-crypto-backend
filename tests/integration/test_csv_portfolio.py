@@ -12,7 +12,7 @@ QUANTITY_COIN_ONE = 0.123
 QUANTITY_COIN_TWO = 0.456
 QUANTITY_LP_TOKENS = 5.0
 
-USD = 'USD'
+DAI = 'DAI'
 PAIR_ID = 'PAIR_ID'
 COIN_ONE = 'COIN_ONE'
 COIN_TWO = 'COIN_TWO'
@@ -26,7 +26,7 @@ class TestCsvPortfolio(unittest.TestCase):
     def test_get_quantity_usd(self):
         self.__setup_tests()
 
-        quantity_usd = self.csv_portfolio.get_quantity_usd()
+        quantity_usd = self.csv_portfolio.get_quantity_dai()
         self.assertEqual(quantity_usd, QUANTITY_USD)
     
     def test_get_quantity_coin(self):
@@ -39,7 +39,7 @@ class TestCsvPortfolio(unittest.TestCase):
         self.__setup_tests()
 
         result = self.csv_portfolio.buy_coin(COIN_ONE, QUANTITY_USD, QUANTITY_COIN_ONE)
-        amount_usd = self.csv_portfolio.get_quantity_usd()
+        amount_usd = self.csv_portfolio.get_quantity_dai()
         amount_coin = self.csv_portfolio.get_quantity_coin(COIN_ONE)
 
         self.assertEqual(amount_usd, 0.0)
@@ -50,7 +50,7 @@ class TestCsvPortfolio(unittest.TestCase):
         self.__setup_tests()
 
         result = self.csv_portfolio.sell_coin(COIN_ONE, QUANTITY_USD, QUANTITY_COIN_ONE)
-        amount_usd = self.csv_portfolio.get_quantity_usd()
+        amount_usd = self.csv_portfolio.get_quantity_dai()
         amount_coin = self.csv_portfolio.get_quantity_coin(COIN_ONE)
 
         self.assertEqual(amount_usd, 2 * QUANTITY_USD)
@@ -85,7 +85,7 @@ class TestCsvPortfolio(unittest.TestCase):
     
     def __setup_tests(self):
         portfolio = {
-            USD: QUANTITY_USD,
+            DAI: QUANTITY_USD,
             COIN_ONE: QUANTITY_COIN_ONE,
             COIN_TWO: QUANTITY_COIN_TWO,
             PAIR_ID: QUANTITY_LP_TOKENS

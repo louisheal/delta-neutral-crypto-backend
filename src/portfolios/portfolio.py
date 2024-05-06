@@ -4,7 +4,7 @@ import abc
 class IPortfolio(abc.ABC):
     
     @abc.abstractmethod
-    def get_quantity_usd(self) -> float:
+    def get_quantity_dai(self) -> float:
         pass
     
     @abc.abstractmethod

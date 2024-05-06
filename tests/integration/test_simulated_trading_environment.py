@@ -22,8 +22,15 @@ UNISWAP_APP_ID = os.getenv('UNISWAP_APP_ID')
 
 PORTFOLIO_PATH = Path('tests/integration/fixtures/test_portfolio.csv')
 
-USD = 'USD'
-ETH = 'ETH'
+PAIR_ID = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"
+
+DAI = 'DAI'
+WETH = 'WETH'
+
+ZERO = 0.0
+QUANTITY_DAI = 500
+QUANTITY_WETH = 1
+QUANTITY_LP_TOKENS = 10
 
 
 class TestSimulatedTradingEnvironment(unittest.TestCase):
@@ -35,73 +42,105 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
        self.environment = SimulatedTradingEnvironment(self.coin_api, self.pool_api, self.portfolio)
     
     def test_get_price_returns(self):
-        price = self.environment.get_price(ETH)
+        price = self.environment.get_price(WETH)
         self.assertIsNotNone(price)
 
     def test_buy_coin_adds_to_portfoilio(self):
         self.__setup_buy_coin_tests()
 
-        result = self.environment.buy_coin(ETH, 500)
-        quantity_usd = self.portfolio.get_quantity_usd()
-        quantity_eth = self.portfolio.get_quantity_coin(ETH)
+        result = self.environment.buy_coin(WETH, QUANTITY_DAI)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
         
-        self.assertEqual(500.0, quantity_usd)
-        self.assertGreater(quantity_eth, 0.0)
+        self.assertEqual(quantity_dai, ZERO)
+        self.assertGreater(quantity_weth, ZERO)
         self.assertTrue(result)
     
     def test_buy_coin_fails_when_not_enough_funds(self):
         self.__setup_buy_coin_tests()
 
-        result = self.environment.buy_coin(ETH, 5000)
-        quantity_usd = self.portfolio.get_quantity_usd()
-        quantity_eth = self.portfolio.get_quantity_coin(ETH)
+        result = self.environment.buy_coin(WETH, QUANTITY_DAI + 1)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
         
-        self.assertEqual(1000.0, quantity_usd)
-        self.assertEqual(0.0, quantity_eth)
+        self.assertEqual(quantity_dai, QUANTITY_DAI)
+        self.assertEqual(quantity_weth, ZERO)
         self.assertFalse(result)
     
     def test_sell_coin_removes_from_portfolio(self):
         self.__setup_sell_coin_tests()
 
-        result = self.environment.sell_coin(ETH, 500)
-        quantity_usd = self.portfolio.get_quantity_usd()
-        quantity_eth = self.portfolio.get_quantity_coin(ETH)
+        result = self.environment.sell_coin(WETH, QUANTITY_WETH)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
         
-        self.assertEqual(0.0, quantity_eth)
-        self.assertGreater(quantity_usd, 0.0)
+        self.assertEqual(quantity_weth, ZERO)
+        self.assertGreater(quantity_dai, ZERO)
         self.assertTrue(result)
 
     def test_sell_coin_fails_when_not_enough_funds(self):
         self.__setup_sell_coin_tests()
 
-        result = self.environment.sell_coin(ETH, 5000)
-        quantity_usd = self.portfolio.get_quantity_usd()
-        quantity_eth = self.portfolio.get_quantity_coin(ETH)
+        result = self.environment.sell_coin(WETH, QUANTITY_WETH + 1)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
         
-        self.assertEqual(0.0, quantity_usd)
-        self.assertEqual(500.0, quantity_eth)
+        self.assertEqual(quantity_dai, ZERO)
+        self.assertEqual(quantity_weth, QUANTITY_WETH)
         self.assertFalse(result)
 
     def test_stake_coin_adds_lp_tokens_to_portfolio(self):
         self.__setup_stake_coin_tests()
+
+        result = self.environment.stake_coin(PAIR_ID, QUANTITY_DAI, QUANTITY_WETH)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
+        quantity_lp_tokens = self.portfolio.get_quantity_coin(PAIR_ID)
+
+        self.assertEqual(quantity_dai, ZERO)
+        self.assertEqual(quantity_weth, ZERO)
+        self.assertGreater(quantity_lp_tokens, ZERO)
+        self.assertTrue(result)
+
+    def test_unstake_coin_removes_lp_tokens_from_portfolio(self):
+        self.__setup_unstake_coin_tests()
+
+        result = self.environment.unstake_coin(PAIR_ID, QUANTITY_LP_TOKENS)
+        quantity_dai = self.portfolio.get_quantity_dai()
+        quantity_weth = self.portfolio.get_quantity_coin(WETH)
+        quantity_lp_tokens = self.portfolio.get_quantity_coin(PAIR_ID)
+
+        self.assertGreater(quantity_dai, ZERO)
+        self.assertGreater(quantity_weth, ZERO)
+        self.assertEqual(quantity_lp_tokens, ZERO)
+        self.assertTrue(result)
+
+    # TODO: Unstake fails when not enough lp tokens
+
+    # TODO: Unstake fails when pair id is invalid
     
     def __setup_buy_coin_tests(self):
         portfolio = {
-            USD: 1000.0 
+            DAI: QUANTITY_DAI
         }
         save_csv_portfolio(portfolio, PORTFOLIO_PATH)
     
     def __setup_sell_coin_tests(self):
         portfolio = {
-            USD: 0.0,
-            ETH: 500.0
+            WETH: QUANTITY_WETH
         }
         save_csv_portfolio(portfolio, PORTFOLIO_PATH)
 
     def __setup_stake_coin_tests(self):
         portfolio = {
-            USD: 100.0,
-            ETH: 500.0
+            DAI: QUANTITY_DAI,
+            WETH: QUANTITY_WETH
+        }
+        save_csv_portfolio(portfolio, PORTFOLIO_PATH)
+
+    def __setup_unstake_coin_tests(self):
+        portfolio = {
+            PAIR_ID: QUANTITY_LP_TOKENS
         }
         save_csv_portfolio(portfolio, PORTFOLIO_PATH)
 

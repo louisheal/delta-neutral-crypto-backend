@@ -21,5 +21,9 @@ class ITradingEnvironment(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def stake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool:
+    def stake_coin(self, pair_id: str, quantity_one: float, quantity_two: float) -> bool:
+        pass
+    
+    @abc.abstractmethod
+    def unstake_coin(self, pair_id: str, quantity_lp_tokens: float) -> bool:
         pass
