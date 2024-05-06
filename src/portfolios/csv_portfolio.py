@@ -47,6 +47,15 @@ class CsvPortfolio(IPortfolio):
         portfolio[pool_id] = portfolio.get(pool_id, 0) + quantity_lp_tokens
 
         return self.__save_portfolio(portfolio)
+    
+    def unstake_coin(self, pool_id: str, symbol_one: float, symbol_two: float, quantity_one: float, quantity_two: float, quantity_lp_tokens: float) -> bool:
+        portfolio = self.__load_portfolio()
+
+        portfolio[pool_id] = portfolio.get(pool_id, 0) - quantity_lp_tokens
+        portfolio[symbol_one] = portfolio.get(symbol_one, 0) + quantity_one
+        portfolio[symbol_two] = portfolio.get(symbol_two, 0) + quantity_two
+
+        return self.__save_portfolio(portfolio)
 
     def __load_portfolio(self) -> dict:
         
