@@ -12,11 +12,11 @@ class IPortfolio(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def buy_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
+    def buy_coin(self, coin_symbol: str, quantity_dai: float, quantity_coin: float) -> bool:
         pass
     
     @abc.abstractmethod
-    def sell_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
+    def sell_coin(self, coin_symbol: str, quantity_dai: float, quantity_coin: float) -> bool:
         pass
     
     @abc.abstractmethod

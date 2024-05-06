@@ -16,21 +16,21 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
     def get_price(self, coin_symbol: str) -> float:
         return self.coin_api.get_price(coin_symbol)
     
-    def buy_coin(self, coin_symbol: str, quantity_usd: float) -> bool:
+    def buy_coin(self, coin_symbol: str, quantity_dai: float) -> bool:
 
-        if self.portfolio.get_quantity_dai() < quantity_usd:
+        if self.portfolio.get_quantity_dai() < quantity_dai:
             return False
         
-        quantity_coin = quantity_usd / self.get_price(coin_symbol)
-        return self.portfolio.buy_coin(coin_symbol, quantity_usd, quantity_coin)
+        quantity_coin = quantity_dai / self.get_price(coin_symbol)
+        return self.portfolio.buy_coin(coin_symbol, quantity_dai, quantity_coin)
     
     def sell_coin(self, coin_symbol: str, quantity_coin: float) -> bool:
         
         if self.portfolio.get_quantity_coin(coin_symbol) < quantity_coin:
             return False
 
-        quantity_usd = quantity_coin * self.get_price(coin_symbol)
-        return self.portfolio.sell_coin(coin_symbol, quantity_usd, quantity_coin)
+        quantity_dai = quantity_coin * self.get_price(coin_symbol)
+        return self.portfolio.sell_coin(coin_symbol, quantity_dai, quantity_coin)
 
     def stake_coin(self, pair_id: str, quantity_one: float, quantity_two: float) -> bool:
         # TODO: After implementing new number type

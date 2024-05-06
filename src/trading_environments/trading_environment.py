@@ -13,7 +13,7 @@ class ITradingEnvironment(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def buy_coin(self, coin_symbol: str, quantity_usd: float) -> bool:
+    def buy_coin(self, coin_symbol: str, quantity_dai: float) -> bool:
         pass
     
     @abc.abstractmethod

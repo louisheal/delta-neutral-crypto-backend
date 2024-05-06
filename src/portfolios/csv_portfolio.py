@@ -23,18 +23,18 @@ class CsvPortfolio(IPortfolio):
         portfolio = self.__load_portfolio()
         return portfolio.get(coin_symbol, 0)
     
-    def buy_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
+    def buy_coin(self, coin_symbol: str, quantity_dai: float, quantity_coin: float) -> bool:
         portfolio = self.__load_portfolio()
 
-        portfolio[DAI] = portfolio.get(DAI, 0) - quantity_usd
+        portfolio[DAI] = portfolio.get(DAI, 0) - quantity_dai
         portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) + quantity_coin
 
         return self.__save_portfolio(portfolio)
     
-    def sell_coin(self, coin_symbol: str, quantity_usd: float, quantity_coin: float) -> bool:
+    def sell_coin(self, coin_symbol: str, quantity_dai: float, quantity_coin: float) -> bool:
         portfolio = self.__load_portfolio()
 
-        portfolio[DAI] = portfolio.get(DAI, 0) + quantity_usd
+        portfolio[DAI] = portfolio.get(DAI, 0) + quantity_dai
         portfolio[coin_symbol] = portfolio.get(coin_symbol, 0) - quantity_coin
 
         return self.__save_portfolio(portfolio)
