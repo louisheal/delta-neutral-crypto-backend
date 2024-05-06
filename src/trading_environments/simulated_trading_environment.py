@@ -1,14 +1,16 @@
 import math
 
-from ..coin_api_adapters.coin_api_adapter import ICoinApiAdapter
 from .trading_environment import ITradingEnvironment
+from ..coin_api_adapters.coin_api_adapter import ICoinApiAdapter
+from ..liquidity_pool_apis.liquidity_pool_api import ILiquidityPoolApi
 from ..portfolios.portfolio import IPortfolio
 
 
 class SimulatedTradingEnvironment(ITradingEnvironment):
     
-    def __init__(self, coin_api: ICoinApiAdapter, portfolio: IPortfolio):
+    def __init__(self, coin_api: ICoinApiAdapter, pool_api: ILiquidityPoolApi, portfolio: IPortfolio):
         self.coin_api = coin_api
+        self.pool_api = pool_api
         self.portfolio = portfolio
     
     def get_price(self, coin_symbol: str) -> float:
@@ -29,31 +31,27 @@ class SimulatedTradingEnvironment(ITradingEnvironment):
 
         quantity_usd = quantity_coin * self.get_price(coin_symbol)
         return self.portfolio.sell_coin(coin_symbol, quantity_usd, quantity_coin)
-    
-    def stake_coin(self, pool_id: str, amount0: float, amount1: float) -> bool:
-        # TODO: After using new number type
+
+    def stake_coin(self, pair_id: str, amount_0: float, amount_1: float) -> bool:
+        # TODO: After implementing new number type
         # MINIMUM_LIQUIDITY = 10**3
 
-        # TODO: Find total_supply, reserve0, reserve1, symbol0 and symbol1 of pool_id
-        total_supply = 0
-        reserve0 = 0
-        reserve1 = 0
-        symbol0 = 'ETH'
-        symbol1 = 'USD'
-
-        balance0 = self.portfolio.get_quantity_coin(symbol0)
-        balance1 = self.portfolio.get_quantity_coin(symbol1)
-        if balance0 < amount0 or balance1 < amount1:
-            return False
-        
-        # TODO: Check that both sides of the stake are equal (or close enough)
+        pair = self.pool_api.get_pair(pair_id)
+        total_supply = pair.total_supply
+        reserve_0 = pair.reserve0
+        reserve_1 = pair.reserve1
+        symbol_0 = pair.symbol0
+        symbol_1 = pair.symbol1
         
         if total_supply == 0:
-            liquidity = math.sqrt(amount0 * amount1)
+            liquidity = math.sqrt(amount_0 * amount_1) # - MINIMUM_LIQUIDITY
         else:
-            liquidity = min((amount0 * total_supply) / reserve0,
-                            (amount1 * total_supply) / reserve1)
-        # TODO: Better check: liquidity needs to be greater than 0
-        assert liquidity > 0
-
-        # TODO: Store liquidity tokens owned for this pool in csv
+            liquidity = min((amount_0 * total_supply) / reserve_0,
+                            (amount_1 * total_supply) / reserve_1)
+        
+        balance_0 = self.portfolio.get_quantity_coin(symbol_0)
+        balance_1 = self.portfolio.get_quantity_coin(symbol_1)
+        if balance_0 < amount_0 or balance_1 < amount_1 or liquidity <= 0:
+            return False
+        
+        return self.portfolio.stake_coin(pair_id, symbol_0, symbol_1, amount_0, amount_1, liquidity)

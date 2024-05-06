@@ -1,17 +1,21 @@
 import csv
 import unittest
+from pathlib import Path
 
 from src.portfolios.csv_portfolio import CsvPortfolio
 
 
-PATH = "tests/integration/fixtures/"
-FIELDNAMES = ['Ticker','Quantity']
+PATH = Path("tests/integration/fixtures/test_portfolio.csv")
+
+TICKER = 'Ticker'
+QUANTITY = 'Quantity'
+FIELDNAMES = [TICKER, QUANTITY]
 
 QUANTITY_USD = 1000.00
 QUANTITY_COIN_ONE = 0.123
 QUANTITY_COIN_TWO = 0.456
 QUANTITY_LP_TOKENS = 5.0
-POOL_ID = 'POOL_ID'
+PAIR_ID = 'PAIR_ID'
 
 USD = 'USD'
 COIN_ONE = 'COIN_ONE'
@@ -60,10 +64,10 @@ class TestCsvPortfolio(unittest.TestCase):
     def test_stake_coin(self):
         self.__setup_tests()
 
-        result = self.csv_portfolio.stake_coin(POOL_ID, COIN_ONE, COIN_TWO, QUANTITY_COIN_ONE, QUANTITY_COIN_TWO, QUANTITY_LP_TOKENS)
-        amount_coin_one = self.csv_portfolio.get_quantity_coin()
-        amount_coin_two = self.csv_portfolio.get_quantity_coin()
-        amount_lp_tokens = self.csv_portfolio.get_quantity_coin()
+        result = self.csv_portfolio.stake_coin(PAIR_ID, COIN_ONE, COIN_TWO, QUANTITY_COIN_ONE, QUANTITY_COIN_TWO, QUANTITY_LP_TOKENS)
+        amount_coin_one = self.csv_portfolio.get_quantity_coin(COIN_ONE)
+        amount_coin_two = self.csv_portfolio.get_quantity_coin(COIN_TWO)
+        amount_lp_tokens = self.csv_portfolio.get_quantity_coin(PAIR_ID)
 
         self.assertEqual(amount_coin_one, 0.0)
         self.assertEqual(amount_coin_two, 0.0)
