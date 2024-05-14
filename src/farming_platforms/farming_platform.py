@@ -1,4 +1,7 @@
 import abc
 
 class IFarmingPlatform(abc.ABC):
-    pass
+    
+    @abc.abstractmethod
+    def get_pools(self):
+        pass
