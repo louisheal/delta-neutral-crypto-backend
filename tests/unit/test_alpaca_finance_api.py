@@ -42,7 +42,7 @@ class TestAlpacaFinanceApi(unittest.TestCase):
         self.af_api = AlpacaFinanceApi()
 
     @httpretty.activate
-    def test_get_pools_TODO(self):
+    def test_get_pools_returns_pool(self):
         
         httpretty.register_uri(httpretty.GET, URL,
                                body=json.dumps(POOL_BODY),
