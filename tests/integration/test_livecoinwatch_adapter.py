@@ -2,7 +2,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_apis.livecoinwatch_adapter import LiveCoinWatchAdapter
 
 
 load_dotenv()
@@ -18,7 +18,7 @@ class TestLiveCoinWatchAdapter(unittest.TestCase):
     
     def test_get_price_calls_api_and_returns_price(self):
         
-        price = coin_api.get_price(COIN_SYMBOL)
+        price = coin_api.get_price_by_symbol(COIN_SYMBOL)
         self.assertIsNotNone(price)
 
 

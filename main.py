@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 from app import app
 from app.farming_pools.alpaca_finance_pool import AlpacaFinancePool
-from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_apis.livecoinwatch_adapter import LiveCoinWatchAdapter
 from app.routes import Routes
 
 
