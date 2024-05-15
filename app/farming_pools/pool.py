@@ -7,6 +7,6 @@ class Pool:
     pool_name: str
     token_one_symbol: str
     token_two_symbol: str
-    trading_fees: float
+    trading_fee: float
     borrow_rate_one: float
     borrow_rate_two: float

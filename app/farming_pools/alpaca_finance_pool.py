@@ -62,7 +62,7 @@ class AlpacaFinancePool(IFarmingPool):
                 borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT])
                 borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT])
 
-                return Pool(pool_id, source_name, trading_fee, token_one_symbol, token_two_symbol, borrow_rate_one, borrow_rate_two)
+                return Pool(pool_id, source_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two)
         
         return None
     

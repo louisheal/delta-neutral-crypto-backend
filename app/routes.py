@@ -38,7 +38,7 @@ class Routes():
         price_two_usd = self.coin_api.get_price(pool.token_two_symbol)
 
         return jsonify(simulate_position(usd_to_invest, duration_years, price_one_usd, price_two_usd,
-                                         pool.trading_fees, pool.borrow_rate_one, pool.borrow_rate_two))
+                                         pool.trading_fee, pool.borrow_rate_one, pool.borrow_rate_two))
 
     def __register_routes(self):
         app.add_url_rule('/pools', 'get_pools', self.get_pools, methods=[GET])
