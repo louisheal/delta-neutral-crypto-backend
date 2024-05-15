@@ -6,5 +6,5 @@ FARM_POOL_API = 'FARM_POOL_API'
 
 if __name__ == '__main__':
     alpaca_finance_api = AlpacaFinancePool()
-    app.config[FARM_POOL_API]
+    app.config[FARM_POOL_API] = alpaca_finance_api
     app.run(host="0.0.0.0")
