@@ -4,11 +4,4 @@ app = Flask(__name__)
 
 from app import routes
 
-
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-DEBUG = os.getenv('DEBUG')
-
-app.run(host="0.0.0.0", debug=False)
+app.run()
