@@ -34,9 +34,13 @@ class AlpacaFinancePool(IFarmingPool):
                 continue
             
             source_name = pool[SOURCE_NAME]
-            trading_fee = pool[TRADING_FEE_APR]
-            borrow_rate_one = pool[BORROWING_INTERESTS][0][INTEREST_PERCENT]
-            borrow_rate_two = pool[BORROWING_INTERESTS][1][INTEREST_PERCENT]
+            trading_fee = float(pool[TRADING_FEE_APR])
+            borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT])
+            borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT])
+
+            if borrow_rate_one == 0.0 or borrow_rate_two == 0.0:
+                continue
+
             results.append(Pool(source_name, trading_fee, borrow_rate_one, borrow_rate_two))
         
         return results
