@@ -11,4 +11,4 @@ from dotenv import load_dotenv
 load_dotenv()
 DEBUG = os.getenv('DEBUG')
 
-app.run(debug=False)
+app.run(host="0.0.0.0", debug=False)
