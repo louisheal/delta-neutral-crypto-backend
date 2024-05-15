@@ -2,7 +2,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from src.liquidity_pool_apis.uniswap_api import UniswapApi
+from app.liquidity_pool_apis.uniswap_api import UniswapApi
 
 
 load_dotenv()

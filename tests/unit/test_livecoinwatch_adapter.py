@@ -1,7 +1,7 @@
 import httpretty
 import unittest
 
-from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
 
 
 API_KEY = "XXXXXX"

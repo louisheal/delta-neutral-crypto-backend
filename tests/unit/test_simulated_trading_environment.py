@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, call
 
-from src.coin_api_adapters.coin_api_adapter import ICoinApiAdapter
-from src.liquidity_pool_apis.pair import Pair
-from src.liquidity_pool_apis.liquidity_pool_api import ILiquidityPoolApi
-from src.portfolios.portfolio import IPortfolio
-from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
+from app.coin_api_adapters.coin_api_adapter import ICoinApiAdapter
+from app.liquidity_pool_apis.pair import Pair
+from app.liquidity_pool_apis.liquidity_pool_api import ILiquidityPoolApi
+from app.portfolios.portfolio import IPortfolio
+from app.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
 
 
 PRICE = 50.0

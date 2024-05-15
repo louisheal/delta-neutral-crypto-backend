@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from src.portfolios.csv_portfolio import CsvPortfolio
+from app.portfolios.csv_portfolio import CsvPortfolio
 from tests.integration.utils import save_csv_portfolio
 
 
