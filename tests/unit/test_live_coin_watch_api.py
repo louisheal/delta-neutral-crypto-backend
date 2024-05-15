@@ -1,7 +1,7 @@
 import httpretty
 import unittest
 
-from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_apis.live_coin_watch_api import LiveCoinWatchApi
 
 
 API_KEY = "XXXXXX"
@@ -19,9 +19,9 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
                                body=f'{{"rate": {PRICE}}}',
                                content_type="application/json")
         
-        coin_api = LiveCoinWatchAdapter(URL, API_KEY)
+        coin_api = LiveCoinWatchApi(URL, API_KEY)
 
-        price = coin_api.get_price(TICKER)
+        price = coin_api.get_price_by_symbol(TICKER)
 
         self.assertTrue(httpretty.has_request)
         self.assertEqual(price, PRICE)
@@ -32,7 +32,3 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
 
         self.assertEqual(api_key, API_KEY)
         self.assertEqual(ticker, TICKER)
-
-
-if __name__ == '__main__':
-    unittest.main()

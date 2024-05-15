@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import unittest
 
-from app.simulation.simulation_utils import simulate_position
+from app.simulation.utils import simulate_position
 
 
 AMOUNT_TO_INVEST = 400

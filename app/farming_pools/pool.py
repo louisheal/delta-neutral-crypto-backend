@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Pool:
-    id: str
+    pool_id: str
     pool_name: str
     token_one_symbol: str
     token_two_symbol: str

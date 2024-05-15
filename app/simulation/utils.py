@@ -3,6 +3,17 @@ import math
 
 def simulate_position(usd_to_invest: float, duration_years: float, price_one_usd: float, price_two_usd: float,
                       trading_fees: float, borrow_rate_one: float, borrow_rate_two: float):
+    """
+    Returns the values necessary to plot a graph of the value of the long position, short position and total position against the price of the asset.
+
+    :param float usd_to_invest: The amount to invest, in USD.
+    :param float duration_years: The amount of time to invest for, in years.
+    :param float price_one_usd: The price of the first token, in USD.
+    :param float price_two_usd: The price of the second token, in USD.
+    :param float trading_fees: The average interest earned on invested tokens, as a percentage.
+    :param float borrow_rate_one: The interest rate for borrowing the first token, as a percentage.
+    :param float borrow_rate_one: The interest rate for borrowing the second token, as a percentage.
+    """
     
     price_range = [x * price_two_usd / 50 for x in range(200)]
 

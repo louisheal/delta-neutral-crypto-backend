@@ -1,9 +1,9 @@
 from flask import jsonify, request
 
 from app import app
-from app.farming_pools.farming_pool import IFarmingPool
-from app.coin_api_adapters.coin_api_adapter import ICoinApiAdapter
-from app.simulation.simulation_utils import simulate_position
+from app.farming_pools.farming_platform_api import IFarmingPlatformApi
+from app.coin_apis.coin_api import ICoinApi
+from app.simulation.utils import simulate_position
 
 
 POOL_ID = 'pool_id'
@@ -16,7 +16,7 @@ POST = 'POST'
 
 class Routes():
     
-    def __init__(self, farming_pool: IFarmingPool, coin_api: ICoinApiAdapter) -> None:
+    def __init__(self, farming_pool: IFarmingPlatformApi, coin_api: ICoinApi) -> None:
         self.farming_pool = farming_pool
         self.coin_api = coin_api
         self.__register_routes()
@@ -34,8 +34,8 @@ class Routes():
 
         pool = self.farming_pool.get_pool_by_id(pool_id)
 
-        price_one_usd = self.coin_api.get_price(pool.token_one_symbol)
-        price_two_usd = self.coin_api.get_price(pool.token_two_symbol)
+        price_one_usd = self.coin_api.get_price_by_symbol(pool.token_one_symbol)
+        price_two_usd = self.coin_api.get_price_by_symbol(pool.token_two_symbol)
 
         return jsonify(simulate_position(usd_to_invest, duration_years, price_one_usd, price_two_usd,
                                          pool.trading_fee, pool.borrow_rate_one, pool.borrow_rate_two))
