@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, current_app
 
 from app import app
 from app.simulation.simulation_utils import simulate_position
@@ -12,7 +12,7 @@ def index():
 
 @app.route('/pools')
 def get_pools():
-    farm_pool_api = app.config[FARM_POOL_API]
+    farm_pool_api = current_app.config[FARM_POOL_API]
     pools = farm_pool_api.get_pools()
     return jsonify(pools)
 
