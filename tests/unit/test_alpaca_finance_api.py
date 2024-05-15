@@ -53,6 +53,6 @@ class TestAlpacaFinanceApi(unittest.TestCase):
 
         self.assertTrue(httpretty.has_request)
         self.assertEqual(pool.pool_name, POOL_NAME)
-        self.assertEqual(pool.trading_fee, TRADING_FEE)
+        self.assertEqual(pool.trading_fees, TRADING_FEE)
         self.assertEqual(pool.borrow_rate_one, BORROW_RATE_ONE)
         self.assertEqual(pool.borrow_rate_two, BORROW_RATE_TWO)

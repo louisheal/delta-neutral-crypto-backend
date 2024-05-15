@@ -3,7 +3,10 @@ from dataclasses import dataclass
 
 @dataclass
 class Pool:
+    id: str
     pool_name: str
-    trading_fee: float
+    token_one_symbol: str
+    token_two_symbol: str
+    trading_fees: float
     borrow_rate_one: float
     borrow_rate_two: float
