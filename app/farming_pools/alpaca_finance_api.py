@@ -1,11 +1,12 @@
 import requests
 
-from .farming_pool import IFarmingPool
+from .farming_platform_api import IFarmingPlatformApi
 from .pool import Pool
 
 
 DATA = 'data'
 FARMING_POOLS = 'farmingPools'
+
 KEY = 'key'
 SOURCE_NAME = 'sourceName'
 TRADING_FEE_APR = 'tradingFeeApr'
@@ -17,7 +18,7 @@ TOKEN_B = 'tokenB'
 SYMBOL = 'symbol'
 
 
-class AlpacaFinancePool(IFarmingPool):
+class AlpacaFinanceApi(IFarmingPlatformApi):
     
     def __init__(self, base_url) -> None:
         self.base_url = base_url
@@ -38,13 +39,13 @@ class AlpacaFinancePool(IFarmingPool):
             if borrow_rate_one == 0.0 or borrow_rate_two == 0.0:
                 continue
             
-            key = pool[KEY]
-            source_name = pool[SOURCE_NAME]
+            pool_id = pool[KEY]
+            pool_name = pool[SOURCE_NAME]
             trading_fee = float(pool[TRADING_FEE_APR])
             token_one_symbol = pool[WORKING_TOKEN][TOKEN_A][SYMBOL]
             token_two_symbol = pool[WORKING_TOKEN][TOKEN_B][SYMBOL]
 
-            results.append(Pool(key, source_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two))
+            results.append(Pool(pool_id, pool_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two))
         
         return results
 

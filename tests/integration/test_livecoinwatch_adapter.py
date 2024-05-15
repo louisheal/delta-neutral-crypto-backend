@@ -2,7 +2,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from app.coin_apis.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_apis.live_coin_watch_api import LiveCoinWatchApi
 
 
 load_dotenv()
@@ -11,7 +11,7 @@ BASE_URL = os.getenv('COIN_URL')
 API_KEY = os.getenv('COIN_API_KEY')
 COIN_SYMBOL = 'ETH'
 
-coin_api = LiveCoinWatchAdapter(BASE_URL, API_KEY)
+coin_api = LiveCoinWatchApi(BASE_URL, API_KEY)
 
 
 class TestLiveCoinWatchAdapter(unittest.TestCase):

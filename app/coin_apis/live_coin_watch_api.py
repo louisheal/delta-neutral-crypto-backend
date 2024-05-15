@@ -12,7 +12,7 @@ APPLICATION_JSON = 'application/json'
 X_API_KEY = 'x-api-key'
 
 
-class LiveCoinWatchAdapter(ICoinApi):
+class LiveCoinWatchApi(ICoinApi):
     
     def __init__(self, base_url, api_key) -> None:
         self.base_url = base_url

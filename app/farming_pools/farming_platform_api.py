@@ -3,8 +3,9 @@ import abc
 from app.farming_pools.pool import Pool
 
 
-class IFarmingPool(abc.ABC):
+class IFarmingPlatformApi(abc.ABC):
     
+    # TODO: Add docstrings
     @abc.abstractmethod
     def get_pools(self) -> list[Pool]:
         pass

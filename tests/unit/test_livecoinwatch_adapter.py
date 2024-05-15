@@ -1,7 +1,7 @@
 import httpretty
 import unittest
 
-from app.coin_apis.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_apis.live_coin_watch_api import LiveCoinWatchApi
 
 
 API_KEY = "XXXXXX"
@@ -19,7 +19,7 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
                                body=f'{{"rate": {PRICE}}}',
                                content_type="application/json")
         
-        coin_api = LiveCoinWatchAdapter(URL, API_KEY)
+        coin_api = LiveCoinWatchApi(URL, API_KEY)
 
         price = coin_api.get_price_by_symbol(TICKER)
 
