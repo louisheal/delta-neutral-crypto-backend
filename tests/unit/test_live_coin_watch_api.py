@@ -32,7 +32,3 @@ class TestSimulatedTradingEnvironment(unittest.TestCase):
 
         self.assertEqual(api_key, API_KEY)
         self.assertEqual(ticker, TICKER)
-
-
-if __name__ == '__main__':
-    unittest.main()

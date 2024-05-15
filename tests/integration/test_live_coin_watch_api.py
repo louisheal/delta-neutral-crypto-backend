@@ -20,7 +20,3 @@ class TestLiveCoinWatchAdapter(unittest.TestCase):
         
         price = coin_api.get_price_by_symbol(COIN_SYMBOL)
         self.assertIsNotNone(price)
-
-
-if __name__ == '__main__':
-    unittest.main()
