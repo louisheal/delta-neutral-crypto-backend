@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 import unittest
 
-from src.simulation.simulation_utils import simulate_position
+from app.simulation.simulation_utils import simulate_position
 
 
-AMOUNT_TO_INVEST = 200
-DURATION_DAYS = 360
+AMOUNT_TO_INVEST = 400
+DURATION_DAYS = 14
 DURATION_YEARS = DURATION_DAYS / 365
 PRICE_TOKEN_ONE = 1
-PRICE_TOKEN_TWO = 24
-TRADING_FEES = 0.5295
-BORROW_RATE_ONE = 0.18
-BORROW_RATE_TWO = 0.21
+PRICE_TOKEN_TWO = 568
+TRADING_FEES = 1.5886
+BORROW_RATE_ONE = 0.16
+BORROW_RATE_TWO = 0.1079
 
 
 class TestSimulationUtils(unittest.TestCase):

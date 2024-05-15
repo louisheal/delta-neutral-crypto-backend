@@ -1,6 +1,6 @@
 import unittest
 
-from src.farming_platforms.alpaca_finance_api import AlpacaFinanceApi
+from app.farming_platforms.alpaca_finance_api import AlpacaFinanceApi
 
 
 class TestAlpacaFinanceApi(unittest.TestCase):

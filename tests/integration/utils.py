@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from src.portfolios.csv_portfolio import FIELDNAMES, TICKER, QUANTITY
+from app.portfolios.csv_portfolio import FIELDNAMES, TICKER, QUANTITY
 
 
 def save_csv_portfolio(portfolio: dict, path: Path):

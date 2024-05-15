@@ -2,7 +2,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
 
 
 load_dotenv()

@@ -3,10 +3,10 @@ import unittest
 from dotenv import load_dotenv
 from pathlib import Path
 
-from src.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
-from src.liquidity_pool_apis.uniswap_api import UniswapApi
-from src.portfolios.csv_portfolio import CsvPortfolio
-from src.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
+from app.coin_api_adapters.livecoinwatch_adapter import LiveCoinWatchAdapter
+from app.liquidity_pool_apis.uniswap_api import UniswapApi
+from app.portfolios.csv_portfolio import CsvPortfolio
+from app.trading_environments.simulated_trading_environment import SimulatedTradingEnvironment
 
 from tests.integration.utils import save_csv_portfolio
 

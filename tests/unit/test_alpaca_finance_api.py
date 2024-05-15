@@ -4,7 +4,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from src.farming_platforms.alpaca_finance_api import AlpacaFinanceApi
+from app.farming_platforms.alpaca_finance_api import AlpacaFinanceApi
 
 
 load_dotenv()
