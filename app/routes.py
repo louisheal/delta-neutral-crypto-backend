@@ -1,34 +1,26 @@
 from flask import jsonify
 
 from app import app
+from app.farming_pools.farming_pool import IFarmingPool
 from app.simulation.simulation_utils import simulate_position
 
 
-FARM_POOL_API = 'FARM_POOL_API'
-
-
-@app.route('/')
-def index():
-    return 'Hello World!'
-
-@app.route('/pools')
-def get_pools():
-    farm_pool_api = app.config[FARM_POOL_API]
-    pools = farm_pool_api.get_pools()
-    return jsonify(pools)
-
-# TODO: Take in vars (from url? from posted json request)
-@app.route('/simulateTrade')
-def simulate_trade():
+class Routes():
     
-    # usd_to_invest : from frontend
-    # duration_years : from frontend
-    # price_one_usd : from coin_api / farm_pool_api
-    # price_two_usd : from coin_api / farm_pool_api
-    # trading_fees : from farm_pool_api
-    # borrow_rate_one : from farm_pool_api
-    # borrow_rate_one : from farm_pool_api
+    def __init__(self, farming_pool: IFarmingPool) -> None:
+        self.farming_pool = farming_pool
+        self.__register_routes()
 
-    ## farming_pool_id : from frontend (user selects pool to simulate)
+    def index(self):
+        return 'Hello World!'
+    
+    def get_pools(self):
+        return jsonify(self.farming_pool.get_pools())
+    
+    def simulate_trade(self):
+        return jsonify(simulate_position())
 
-    return jsonify(simulate_position())
+    def __register_routes(self):
+        app.add_url_rule('/', 'index', self.index)
+        app.add_url_rule('/pools', 'get_pools', self.get_pools)
+        app.add_url_rule('/simulatePosition', 'simulate_position', self.simulate_trade)
