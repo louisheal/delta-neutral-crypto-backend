@@ -1,6 +1,6 @@
 import abc
 
-class IFarmingPlatform(abc.ABC):
+class IFarmingPool(abc.ABC):
     
     @abc.abstractmethod
     def get_pools(self):

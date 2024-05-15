@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from .farming_platform import IFarmingPlatform
+from .farming_pool import IFarmingPool
 from .pool import Pool
 
 
@@ -18,7 +18,7 @@ BORROWING_INTERESTS = 'borrowingInterests'
 INTEREST_PERCENT = 'interestPercent'
 
 
-class AlpacaFinanceApi(IFarmingPlatform):
+class AlpacaFinancePool(IFarmingPool):
     
     def __init__(self) -> None:
         pass

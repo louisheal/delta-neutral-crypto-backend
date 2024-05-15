@@ -4,7 +4,7 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from app.farming_platforms.alpaca_finance_api import AlpacaFinanceApi
+from app.farming_pools.alpaca_finance_pool import AlpacaFinancePool
 
 
 load_dotenv()
@@ -39,7 +39,7 @@ POOL_BODY = {
 class TestAlpacaFinanceApi(unittest.TestCase):
     
     def setUp(self) -> None:
-        self.af_api = AlpacaFinanceApi()
+        self.af_api = AlpacaFinancePool()
 
     @httpretty.activate
     def test_get_pools_returns_pool(self):
