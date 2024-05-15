@@ -1,2 +1,2 @@
 # delta-neutral-crypto-backend
-An automated trading bot for finding and executing pseudo delta-neutral cryptocurrency trades.
+An automated trading tool for finding and pseudo delta-neutral cryptocurrency opportunities.
