@@ -23,4 +23,4 @@ coin_api = LiveCoinWatchApi(COIN_API_URL, COIN_API_KEY)
 routes = Routes(farming_pool, coin_api)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="localhost", debug=True)
