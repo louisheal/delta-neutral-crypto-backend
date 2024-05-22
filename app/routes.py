@@ -32,13 +32,26 @@ class Routes():
         usd_to_invest = data[USD_TO_INVEST]
         duration_years = data[DURATION_YEARS]
 
+        print(f"USD: {usd_to_invest}, Duration: {duration_years}")
+
         pool = self.farming_pool.get_pool_by_id(pool_id)
 
         price_one_usd = self.coin_api.get_price_by_symbol(pool.token_one_symbol)
         price_two_usd = self.coin_api.get_price_by_symbol(pool.token_two_symbol)
 
-        return jsonify(simulate_position(usd_to_invest, duration_years, price_one_usd, price_two_usd,
-                                         pool.trading_fee, pool.borrow_rate_one, pool.borrow_rate_two))
+        trading_fee = pool.trading_fee / 100
+        borrow_rate_one = pool.borrow_rate_one / 100
+        borrow_rate_two = pool.borrow_rate_two / 100
+
+        result = simulate_position(usd_to_invest, duration_years, price_one_usd, price_two_usd,
+                                   trading_fee, borrow_rate_one, borrow_rate_two)
+        
+        print(result[2][0])
+        print(result[2][50])
+        print(result[2][100])
+        print(result[2][199])
+        
+        return jsonify(result)
 
     def __register_routes(self):
         app.add_url_rule('/pools', 'get_pools', self.get_pools, methods=[GET])
