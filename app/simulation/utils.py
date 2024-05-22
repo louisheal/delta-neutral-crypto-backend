@@ -2,7 +2,7 @@ import math
 
 
 def simulate_position(usd_to_invest: float, duration_years: float, price_one_usd: float, price_two_usd: float,
-                      trading_fees: float, borrow_rate_one: float, borrow_rate_two: float):
+                      trading_fees: float, borrow_rate_one: float, borrow_rate_two: float) -> tuple[list[float], list[float], list[float], list[float]]:
     """
     Returns the values necessary to plot a graph of the value of the long position, short position and total position against the price of the asset.
 
@@ -28,11 +28,11 @@ def simulate_position(usd_to_invest: float, duration_years: float, price_one_usd
     return price_range, long_values, short_values, total_values
 
 
-def __simulate_long_position(value_invested: float, duration_years: float, price_token_one: float, price_token_two: float,
+def __simulate_long_position(token_one_invested: float, duration_years: float, price_token_one: float, price_token_two: float,
                              trading_fees: float, borrow_rate_one: float, price_range: list[float]):
 
-    token_one_borrowed = value_invested / price_token_one * 2
-    total_value_invested = value_invested * 3
+    token_one_borrowed = token_one_invested / price_token_one * 2
+    total_value_invested = token_one_invested * 3
 
     token_one_owed = token_one_borrowed * math.exp(borrow_rate_one * duration_years)
 
@@ -41,7 +41,7 @@ def __simulate_long_position(value_invested: float, duration_years: float, price
         
         asset_value = total_value_invested * math.sqrt(future_price / price_token_two) * math.exp(trading_fees * duration_years)
         net_asset_value = asset_value - token_one_owed * price_token_one
-        results.append(net_asset_value - value_invested)
+        results.append(net_asset_value - token_one_invested)
 
     return results
 

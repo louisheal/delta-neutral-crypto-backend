@@ -15,7 +15,7 @@ ALPACA_FINANCE_URL = os.getenv('ALPACA_FINANCE_URL')
 COIN_API_URL = os.getenv('COIN_API_URL')
 COIN_API_KEY = os.getenv('COIN_API_KEY')
 
-CORS(app, resources={r"/pools": {"origins": [FRONTEND_URL]}})
+CORS(app, resources={r"/*": {"origins": [FRONTEND_URL]}})
 
 farming_pool = AlpacaFinanceApi(ALPACA_FINANCE_URL)
 coin_api = LiveCoinWatchApi(COIN_API_URL, COIN_API_KEY)
