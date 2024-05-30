@@ -1,64 +1,69 @@
 import math
 
 
-def simulate_position(usd_to_invest: float, duration_years: float, price_one_usd: float, price_two_usd: float,
-                      trading_fees: float, borrow_rate_one: float, borrow_rate_two: float) -> tuple[list[float], list[float], list[float], list[float]]:
+PRICE_POINTS = 40
+
+
+def simulate_position(usd_to_invest: float, duration_days: int, token_a_price: float, token_b_price: float, trading_fee_rate: float,
+                      token_a_rate: float, token_b_rate: float) -> tuple[list[float], list[float], list[float], list[float]]:
     """
     Returns the values necessary to plot a graph of the value of the long position, short position and total position against the price of the asset.
 
     :param float usd_to_invest: The amount to invest, in USD.
-    :param float duration_years: The amount of time to invest for, in years.
-    :param float price_one_usd: The price of the first token, in USD.
-    :param float price_two_usd: The price of the second token, in USD.
-    :param float trading_fees: The average interest earned on invested tokens, as a percentage.
-    :param float borrow_rate_one: The interest rate for borrowing the first token, as a percentage.
-    :param float borrow_rate_one: The interest rate for borrowing the second token, as a percentage.
+    :param float duration_days: The amount of time to invest for, in days.
+    :param float token_a_price: The price of the first token, in USD.
+    :param float token_b_price: The price of the second token, in USD.
+    :param float trading_fee_rate: The average interest earned on invested tokens, as a percentage.
+    :param float token_a_rate: The interest rate for borrowing the first token, as a percentage.
+    :param float token_b_rate: The interest rate for borrowing the second token, as a percentage.
     """
     
-    price_range = [x * price_two_usd / 50 for x in range(200)]
+    price_range = [round(token_b_price * (1/2 + x / PRICE_POINTS), 2) for x in range(PRICE_POINTS)]
 
-    long_quantity = usd_to_invest * (1/4) / price_one_usd
-    long_values = __simulate_long_position(long_quantity, duration_years, price_one_usd, price_two_usd, trading_fees, borrow_rate_one, price_range)
+    borrowed_a = (1/2) * usd_to_invest / token_a_price
+    borrowed_b = (3/2) * usd_to_invest / token_b_price
 
-    short_quantity = usd_to_invest * (3/4) / price_one_usd
-    short_values = __simulate_short_position(short_quantity, duration_years, price_two_usd, trading_fees, borrow_rate_two, price_range)
+    # Assumes no transaction fees when exchanging between USD, Token A and Token B
+    long_quant_a = (3/8) * usd_to_invest / token_a_price
+    long_quant_b = (3/8) * usd_to_invest / token_b_price
 
-    total_values = [sum(x) for x in zip(long_values, short_values)]
+    short_quant_a = (9/8) * usd_to_invest / token_a_price
+    short_quant_b = (9/8) * usd_to_invest / token_b_price
 
-    return price_range, long_values, short_values, total_values
+    long_const_prod = long_quant_a * long_quant_b
+    short_const_prod = short_quant_a * short_quant_b
 
+    long_equity = (long_quant_a - borrowed_a) * token_a_price + long_quant_b * token_b_price
+    short_equity = short_quant_a * token_a_price + (short_quant_b - borrowed_b) * token_b_price
 
-def __simulate_long_position(token_one_invested: float, duration_years: float, price_token_one: float, price_token_two: float,
-                             trading_fees: float, borrow_rate_one: float, price_range: list[float]):
+    long_profits = []
+    short_profits = []
+    total_profits = []
 
-    token_one_borrowed = token_one_invested / price_token_one * 2
-    total_value_invested = token_one_invested * 3
-
-    token_one_owed = token_one_borrowed * math.exp(borrow_rate_one * duration_years)
-
-    results = []
-    for future_price in price_range:
+    # Assumes that the price of token a is constant (i.e. a stablecoin)
+    for new_token_b_price in price_range:
         
-        asset_value = total_value_invested * math.sqrt(future_price / price_token_two) * math.exp(trading_fees * duration_years)
-        net_asset_value = asset_value - token_one_owed * price_token_one
-        results.append(net_asset_value - token_one_invested)
+        new_borrowed_a = borrowed_a * math.exp(token_a_rate * duration_days / 365)
+        new_borrowed_b = borrowed_b * math.exp(token_b_rate * duration_days / 365)
 
-    return results
+        new_long_quant_a = math.sqrt(long_const_prod * new_token_b_price / token_a_price)
+        new_long_quant_b = math.sqrt(long_const_prod / new_token_b_price * token_a_price)
 
+        new_short_quant_a = math.sqrt(short_const_prod * new_token_b_price / token_a_price)
+        new_short_quant_b = math.sqrt(short_const_prod / new_token_b_price * token_a_price)
 
-def __simulate_short_position(value_invested: float, duration_years: float, price_token_two: float,
-                              trading_fees: float, borrow_rate_two: float, price_range: list[float]):
-    
-    token_two_borrowed = value_invested / price_token_two * 2
-    total_value_invested = value_invested * 3
+        new_long_value = new_long_quant_a * token_a_price + new_long_quant_b * new_token_b_price
+        new_short_value = new_short_quant_a * token_a_price + new_short_quant_b * new_token_b_price
 
-    token_two_owed = token_two_borrowed * math.exp(borrow_rate_two * duration_years)
+        new_long_equity = new_long_value * math.exp(trading_fee_rate * duration_days / 365) - new_borrowed_a * token_a_price
+        new_short_equity = new_short_value * math.exp(trading_fee_rate * duration_days / 365) - new_borrowed_b * new_token_b_price
 
-    results = []
-    for future_price in price_range:
-        
-        asset_value = total_value_invested * math.sqrt(future_price / price_token_two) * math.exp(trading_fees * duration_years)
-        net_asset_value = asset_value - token_two_owed * future_price
-        results.append(net_asset_value - value_invested)
+        long_profit = new_long_equity - long_equity
+        short_profit = new_short_equity - short_equity
+        total_profit = long_profit + short_profit
 
-    return results
+        long_profits.append(long_profit)
+        short_profits.append(short_profit)
+        total_profits.append(total_profit)
+
+    return price_range, long_profits, short_profits, total_profits

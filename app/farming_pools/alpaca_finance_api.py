@@ -33,15 +33,15 @@ class AlpacaFinanceApi(IFarmingPlatformApi):
             if len(pool[BORROWING_INTERESTS]) < 2:
                 continue
             
-            borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT])
-            borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT])
+            borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT]) / 200
+            borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT]) / 200
 
             if borrow_rate_one == 0.0 or borrow_rate_two == 0.0:
                 continue
             
             pool_id = pool[KEY]
             pool_name = pool[SOURCE_NAME]
-            trading_fee = float(pool[TRADING_FEE_APR])
+            trading_fee = float(pool[TRADING_FEE_APR]) / 300
             token_one_symbol = pool[WORKING_TOKEN][TOKEN_A][SYMBOL]
             token_two_symbol = pool[WORKING_TOKEN][TOKEN_B][SYMBOL]
 
@@ -57,11 +57,11 @@ class AlpacaFinanceApi(IFarmingPlatformApi):
             
             if pool[KEY] == pool_id:
                 source_name = pool[SOURCE_NAME]
-                trading_fee = float(pool[TRADING_FEE_APR])
+                trading_fee = float(pool[TRADING_FEE_APR]) / 300
                 token_one_symbol = pool[WORKING_TOKEN][TOKEN_A][SYMBOL]
                 token_two_symbol = pool[WORKING_TOKEN][TOKEN_B][SYMBOL]
-                borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT])
-                borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT])
+                borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT]) / 200
+                borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT]) / 200
 
                 return Pool(pool_id, source_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two)
         
