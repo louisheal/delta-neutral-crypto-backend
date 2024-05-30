@@ -1,9 +1,6 @@
 import math
 
 
-PRICE_POINTS = 40
-
-
 def simulate_position(usd_to_invest: float, duration_days: int, token_a_price: float, token_b_price: float, trading_fee_rate: float,
                       token_a_rate: float, token_b_rate: float) -> tuple[list[float], list[float], list[float], list[float]]:
     """
@@ -18,7 +15,8 @@ def simulate_position(usd_to_invest: float, duration_days: int, token_a_price: f
     :param float token_b_rate: The interest rate for borrowing the second token, as a percentage.
     """
     
-    price_range = [round(token_b_price * (1/2 + x / PRICE_POINTS), 2) for x in range(PRICE_POINTS)]
+    labels = [f"{x - 100}%" for x in range(25, 200, 5)]
+    price_range = [token_b_price * (x / 100) for x in range(25, 200, 5)]
 
     borrowed_a = (1/2) * usd_to_invest / token_a_price
     borrowed_b = (3/2) * usd_to_invest / token_b_price
@@ -66,4 +64,4 @@ def simulate_position(usd_to_invest: float, duration_days: int, token_a_price: f
         short_profits.append(short_profit)
         total_profits.append(total_profit)
 
-    return price_range, long_profits, short_profits, total_profits
+    return labels, long_profits, short_profits, total_profits
