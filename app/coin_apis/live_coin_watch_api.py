@@ -26,4 +26,10 @@ class LiveCoinWatchApi(ICoinApi):
         }
         response = requests.post(f"{self.base_url}/coins/single", headers=headers, data=payload)
         data = response.json()
+
+        if RATE not in data:
+            # TODO: Turn into logging (for future ticket)
+            print(f"Error getting price for: {symbol}")
+            return 0.01
+        
         return data[RATE]
