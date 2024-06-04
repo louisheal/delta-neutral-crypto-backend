@@ -1,5 +1,5 @@
-# Delta-Neutral (Frontend)
-A dashboard interface for displaying Delta-Neutral trading opportunities.
+# Delta-Neutral (Backend)
+A web-based tool for finding pseudo delta-neutral cryptocurrency trades.
 
 ## Links
 
