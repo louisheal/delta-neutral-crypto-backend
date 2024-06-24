@@ -3,7 +3,7 @@ import abc
 from app.farming_pools.pool import Pool
 
 
-class IFarmingPlatformApi(abc.ABC):
+class IFarmingPool(abc.ABC):
     
     @abc.abstractmethod
     def get_pools(self) -> list[Pool]:

@@ -6,7 +6,6 @@ from app.simulation.utils import simulate_position
 
 AMOUNT_TO_INVEST = 400
 DURATION_DAYS = 14
-DURATION_YEARS = DURATION_DAYS / 365
 PRICE_TOKEN_ONE = 1
 PRICE_TOKEN_TWO = 568
 TRADING_FEES = 1.5886
@@ -18,7 +17,7 @@ class TestSimulationUtils(unittest.TestCase):
     
     def test_simulate_position(self):
         
-        x, long, short, total = simulate_position(AMOUNT_TO_INVEST, DURATION_YEARS, PRICE_TOKEN_ONE,
+        x, long, short, total = simulate_position(AMOUNT_TO_INVEST, DURATION_DAYS, PRICE_TOKEN_ONE,
                                                   PRICE_TOKEN_TWO, TRADING_FEES, BORROW_RATE_ONE, BORROW_RATE_TWO)
         
         plt.plot(x, long, lw=1, label="Long")

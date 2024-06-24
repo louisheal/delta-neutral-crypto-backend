@@ -1,7 +1,9 @@
+import math
 import requests
 
-from .farming_platform_api import IFarmingPlatformApi
+from .farming_pool import IFarmingPool
 from .pool import Pool
+from app.simulation.utils import calculate_apy
 
 
 DATA = 'data'
@@ -18,7 +20,7 @@ TOKEN_B = 'tokenB'
 SYMBOL = 'symbol'
 
 
-class AlpacaFinanceApi(IFarmingPlatformApi):
+class AlpacaFinanceApi(IFarmingPool):
     
     def __init__(self, base_url) -> None:
         self.base_url = base_url
@@ -45,7 +47,13 @@ class AlpacaFinanceApi(IFarmingPlatformApi):
             token_one_symbol = pool[WORKING_TOKEN][TOKEN_A][SYMBOL]
             token_two_symbol = pool[WORKING_TOKEN][TOKEN_B][SYMBOL]
 
-            results.append(Pool(pool_id, pool_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two))
+            # TODO: Check order of borrow rates
+            trading_fee_interest = math.exp(trading_fee)
+            stablecoin_interest = math.exp(borrow_rate_one)
+            non_stable_interest = math.exp(borrow_rate_two)
+            apy = calculate_apy(trading_fee_interest, stablecoin_interest, non_stable_interest, 3, 1)
+
+            results.append(Pool(pool_id, pool_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two, apy))
         
         return results
 
@@ -63,7 +71,7 @@ class AlpacaFinanceApi(IFarmingPlatformApi):
                 borrow_rate_one = float(pool[BORROWING_INTERESTS][0][INTEREST_PERCENT]) / 200
                 borrow_rate_two = float(pool[BORROWING_INTERESTS][1][INTEREST_PERCENT]) / 200
 
-                return Pool(pool_id, source_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two)
+                return Pool(pool_id, source_name, token_one_symbol, token_two_symbol, trading_fee, borrow_rate_one, borrow_rate_two, 0)
         
         return None
     

@@ -10,3 +10,4 @@ class Pool:
     trading_fee: float
     borrow_rate_one: float
     borrow_rate_two: float
+    apy: float
