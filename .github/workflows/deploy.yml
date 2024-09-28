@@ -1,0 +1,24 @@
+name: Deploy to Pi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubunutu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install ssh key
+      uses: shimantro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PI_SSH_KEY }}
+        known_hosts: ${{ secrets.PI_HOST }}
+
+    - name: Deploy to Pi
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash /home/admin/update_repo.sh'
