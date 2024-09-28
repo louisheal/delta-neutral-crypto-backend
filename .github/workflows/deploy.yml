@@ -21,4 +21,4 @@ jobs:
 
     - name: Deploy to Pi
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash /home/admin/update_repo.sh'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash /home/admin/projects/update_repo.sh /home/admin/projects/delta_neutral_crypto_backend'
