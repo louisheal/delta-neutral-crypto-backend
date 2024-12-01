@@ -10,8 +10,5 @@ def get_secret(secret_name):
             return f.read().strip()
     return os.getenv(secret_name)
 
-COIN_API_KEY = get_secret('DN_COIN_API_KEY')
 FRONTEND_URL = get_secret('DN_FRONTEND_URL')
-
 ALPACA_FINANCE_URL = "https://alpaca-static-api.alpacafinance.org/bsc/v1/landing/summary.json"
-COIN_API_URL = "https://api.livecoinwatch.com"
