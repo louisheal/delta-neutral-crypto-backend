@@ -1,4 +1,4 @@
-name: CI Pipeline for Delta-Neutral
+name: CI/CD Pipeline for Delta-Neutral
 
 on:
   push:
@@ -26,3 +26,27 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: |
         docker push ljheal/delta-neutral:latest
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Kubeconfig
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+        kubectl apply -f k8s/ingress.yaml

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delta-neutral-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delta-neutral
+  template:
+    metadata:
+      labels:
+        app: delta-neutral
+    spec:
+      containers:
+      - name: delta-neutral
+        image: ljheal/delta-neutral:latest
+        ports:
+        - containerPort: 80
