@@ -20,4 +20,4 @@ spec:
   tls:
   - hosts:
     - api.delta-neutral.louisheal.com
-    secretName: delta-neutral-tls 
+    secretName: tls-delta-neutral
