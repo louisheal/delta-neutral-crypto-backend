@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: delta-neutral-deployment
-  namespace: default
+  namespace: cattle-system
 spec:
   replicas: 1
   selector:

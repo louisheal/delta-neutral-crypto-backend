@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: delta-neutral-service
-  namespace: default
+  namespace: cattle-system
 spec:
   type: ClusterIP
   ports:
