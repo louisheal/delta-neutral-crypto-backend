@@ -16,8 +16,11 @@ spec:
       containers:
       - name: delta-neutral-container
         image: ljheal/delta-neutral:latest
-        envFrom:
-        - secretRef:
-            name: api-keys
+        env:
+        - name: FRONTEND_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-keys
+              key: FRONTEND_URL
         ports:
         - containerPort: 8000
