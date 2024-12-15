@@ -15,6 +15,12 @@ spec:
     spec:
       containers:
       - name: delta-neutral-container
+        readinessProbe:
+        httpGet:
+          path: /healthz
+          port: 8000
+        initialDelaySeconds: 5
+        periodSeconds: 5
         image: ljheal/delta-neutral:latest
         env:
         - name: FRONTEND_URL
