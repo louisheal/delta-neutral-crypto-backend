@@ -14,7 +14,7 @@ spec:
         app: delta-neutral
     spec:
       containers:
-      - name: delta-neutral
+      - name: delta-neutral-container
         image: ljheal/delta-neutral:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8000
