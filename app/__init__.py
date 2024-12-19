@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -7,6 +10,8 @@ from .config import (
   FRONTEND_URL,
   ALPACA_FINANCE_URL,
 )
+
+logger.log(msg=f"allowing origin {FRONTEND_URL}")
 
 app = FastAPI()
 app.add_middleware(
