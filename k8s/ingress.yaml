@@ -4,7 +4,9 @@ metadata:
   name: delta-neutral-ingress
   namespace: delta-neutral
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/issuer: delta-neutral-issuer
+  labels:
+    app: delta-neutral
 spec:
   ingressClassName: traefik
   rules:
