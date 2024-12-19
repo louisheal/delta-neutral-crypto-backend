@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: delta-neutral-ingress
   namespace: delta-neutral
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: traefik
   rules:
