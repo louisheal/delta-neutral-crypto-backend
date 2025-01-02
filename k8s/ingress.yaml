@@ -4,7 +4,7 @@ metadata:
   name: delta-neutral-ingress
   namespace: delta-neutral
   annotations:
-    cert-manager.io/issuer: delta-neutral-issuer
+    cert-manager.io/cluster-issuer: cloudflare-issuer
   labels:
     app: delta-neutral
 spec:
